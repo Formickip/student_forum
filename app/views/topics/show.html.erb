@@ -1,0 +1,39 @@
+<p id="notice"><%= notice %></p>
+
+def set_topic
+  @course = Course.find(params[:course_id])
+  @topic = Topic.find(params[:id])
+end
+
+Na koniec możemy zaktualizować widok tematu tak, aby wyświetlał wszystkie posty i posiadał link do tworzenia nowej odpowiedzi.
+
+<p id="notice"><%= notice %></p>
+
+<h1><%= @topic.title %> by <%= link_to @topic.student.name, @topic.student %></h1>
+<h2><%= link_to @course.name, @course %></h2>
+
+<hr>
+<h1>Lista odpowiedzi</h1>
+<% if @topic.posts.length == 0 %>
+  Nie ma żadnych odpowiedzi
+<% else %>
+  <ul>
+  <% @topic.posts.each do |post| %>
+    <li>
+      <strong><%= post.student.name %> pisze:</strong> <%= post.body %>
+    </li>
+  <% end %>
+  </ul>
+<% end %>
+
+<hr>
+
+<% if logged_in? && current_student.follows?(@course) %>
+  <%= link_to "Dodaj odpowiedź", new_course_topic_post_path(@course,@topic) %>
+<% end %>
+
+<hr>
+
+<%= link_to 'Edit', edit_course_topic_path(@course, @topic) %> |
+<%= link_to 'Back', @course %>
+

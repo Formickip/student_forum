@@ -1,4 +1,24 @@
 Rails.application.routes.draw do
+  get 'sessions/new'
+
+  resources :posts
+  resources :topics
+  resources :courses
+  resources :students
+  root to: 'static#index'
+  get    '/login',   to: 'sessions#new'
+  post   '/login',   to: 'sessions#create'
+  delete '/logout',  to: 'sessions#destroy'
+
+  get '/courses/:id/follow', to: 'courses#follow'
+get '/courses/:id/unfollow', to: 'courses#unfollow'
+
+resources :students
+resources :courses do
+  resources :topics, only: [:new, :create, :edit, :update, :show, :destroy] do
+    resources :posts, only: [:new, :create, :edit, :update, :show, :destroy]
+  end
+end
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
